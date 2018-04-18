@@ -1,17 +1,21 @@
-const dotenv = require("dotenv");
-dotenv.config();
+const dotenv = require("dotenv")
+dotenv.config()
 
-const express = require("express");
-const bodyParser = require("body-parser");
-const app = express();
+const express = require("express")
+const morgan = require("morgan")
+const cors = require("cors")
+const bodyParser = require("body-parser")
+const app = express()
 
 app.use(bodyParser.json())
+app.use(morgan("tiny"))
+app.use(cors())
 
 const url = process.env.MONGO_URL,
     dbName = process.env.DB_NAME,
-    port = process.env.PORT;
+    port = process.env.PORT
 
-const MongoClient = require('mongodb').MongoClient;
+const MongoClient = require('mongodb').MongoClient
 
 let exampleScore = {
     name: "Beep boop",
@@ -21,7 +25,7 @@ let exampleScore = {
 }
 
 MongoClient.connect(url).then(client => {
-    const db = client.db(dbName);
+    const db = client.db(dbName)
     const scoreboard = db.collection('scoreboard')
 
     app.get('/scores', (req, res) => {
@@ -36,7 +40,7 @@ MongoClient.connect(url).then(client => {
             })
     })
     app.post('/scores', (req, res) => {
-        let b = req.body;
+        let b = req.body
         let doc = {
             time: b.time,
             name: b.name,
@@ -69,10 +73,12 @@ MongoClient.connect(url).then(client => {
             return
         }
         scoreboard.insertOne(doc).then(() => {
-            res.sendStatus(200);
+            res.sendStatus(200)
         })
     })
-    app.listen(port);
+    app.listen(port, () => {
+        console.log(`Server is now listening on port ${port}`)
+    })
 }).catch(err => {
-    console.error(err);
+    console.error(err)
 })
