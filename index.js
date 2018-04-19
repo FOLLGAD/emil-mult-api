@@ -66,7 +66,7 @@ MongoClient.connect(url).then(client => {
             })
             return
         }
-        if (doc.min > 0) {
+        if (doc.min <= 0) {
             res.status(400).json({
                 error: "Minimum must be more than zero."
             })
