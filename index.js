@@ -31,7 +31,7 @@ MongoClient.connect(url).then(client => {
     app.get('/scores', (req, res) => {
         scoreboard
             .find()
-            .project({ name: 1, time: 1, max: 1, min: 1, _id: 0 })
+            .project({ name: 1, time: 1, max: 1, min: 1, created: 1, _id: 0 })
             .limit(10)
             .sort({ time: 1 })
             .toArray()
@@ -46,6 +46,7 @@ MongoClient.connect(url).then(client => {
             name: b.name,
             max: b.max,
             min: b.min,
+            created: new Date(),
             ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
         }
         if (!doc.time) {
