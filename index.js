@@ -32,7 +32,56 @@ MongoClient.connect(url).then(client => {
         scoreboard
             .find()
             .project({ name: 1, time: 1, max: 1, min: 1, created: 1, _id: 0 })
-            .limit(10)
+            .limit(req.query.l || 10)
+            .sort({ time: 1 })
+            .toArray()
+            .then(arr => {
+                res.json(arr)
+            })
+    })
+    app.get('/scores/last', (req, res) => {
+        scoreboard
+            .find()
+            .project({ name: 1, time: 1, max: 1, min: 1, created: 1, _id: 0 })
+            .limit(req.query.l || 10)
+            .sort({ created: 0 })
+            .toArray()
+            .then(arr => {
+                res.json(arr)
+            })
+    })
+    app.get('/scores/daily', (req, res) => {
+        let today = new Date();
+        today.setHours(0);
+        today.setMinutes(0);
+        today.setSeconds(0);
+        today.setMilliseconds(0);
+
+        scoreboard
+            .find({ created: { $gt: today } })
+            .project({ name: 1, time: 1, max: 1, min: 1, created: 1, _id: 0 })
+            .limit(req.query.l || 10)
+            .sort({ time: 1 })
+            .toArray()
+            .then(arr => {
+                res.json(arr)
+            })
+    })
+    app.get('/scores/weekly', (req, res) => {
+        let monday = new Date();
+        monday.setHours(0);
+        monday.setMinutes(0);
+        monday.setSeconds(0);
+        monday.setMilliseconds(0);
+
+        var day = monday.getDay() || 7;
+        if (day !== 1)
+            monday.setHours(-24 * (day - 1));
+
+        scoreboard
+            .find({ created: { $gt: monday } })
+            .project({ name: 1, time: 1, max: 1, min: 1, created: 1, _id: 0 })
+            .limit(req.query.l || 10)
             .sort({ time: 1 })
             .toArray()
             .then(arr => {
