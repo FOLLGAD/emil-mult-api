@@ -32,7 +32,7 @@ MongoClient.connect(url).then(client => {
         scoreboard
             .find()
             .project({ name: 1, time: 1, max: 1, min: 1, created: 1, _id: 0 })
-            .limit(req.query.l || 10)
+            .limit(Number(req.query.l) || 10)
             .sort({ time: 1 })
             .toArray()
             .then(arr => {
@@ -43,7 +43,7 @@ MongoClient.connect(url).then(client => {
         scoreboard
             .find()
             .project({ name: 1, time: 1, max: 1, min: 1, created: 1, _id: 0 })
-            .limit(req.query.l || 10)
+            .limit(Number(req.query.l) || 10)
             .sort({ created: 0 })
             .toArray()
             .then(arr => {
@@ -60,7 +60,7 @@ MongoClient.connect(url).then(client => {
         scoreboard
             .find({ created: { $gt: today } })
             .project({ name: 1, time: 1, max: 1, min: 1, created: 1, _id: 0 })
-            .limit(req.query.l || 10)
+            .limit(Number(req.query.l) || 10)
             .sort({ time: 1 })
             .toArray()
             .then(arr => {
@@ -81,7 +81,7 @@ MongoClient.connect(url).then(client => {
         scoreboard
             .find({ created: { $gt: monday } })
             .project({ name: 1, time: 1, max: 1, min: 1, created: 1, _id: 0 })
-            .limit(req.query.l || 10)
+            .limit(Number(req.query.l) || 10)
             .sort({ time: 1 })
             .toArray()
             .then(arr => {
