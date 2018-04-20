@@ -44,7 +44,7 @@ MongoClient.connect(url).then(client => {
             .find()
             .project({ name: 1, time: 1, max: 1, min: 1, created: 1, _id: 0 })
             .limit(Number(req.query.l) || 10)
-            .sort({ created: 0 })
+            .sort({ created: -1 })
             .toArray()
             .then(arr => {
                 res.json(arr)
