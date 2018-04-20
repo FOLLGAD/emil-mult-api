@@ -41,7 +41,7 @@ MongoClient.connect(url).then(client => {
     })
     app.get('/scores/last', (req, res) => {
         scoreboard
-            .find()
+            .find({ created: { $exists: true, $ne: null } })
             .project({ name: 1, time: 1, max: 1, min: 1, created: 1, _id: 0 })
             .limit(Number(req.query.l) || 10)
             .sort({ created: -1 })
